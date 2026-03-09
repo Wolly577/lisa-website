@@ -1,0 +1,20 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+
+# Old/unused template images
+images/blog-*.jpg
+images/demo-*.jpg
+images/dr-*.jpg
+images/slideshow-*.jpg
+images/Lisa-portrait.jpg
+images/medical.jpg
+images/bottom-b-bg.jpg
+images/contact.jpg
+images/kind-basteln.jpg

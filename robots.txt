@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://www.ls-kinderpsychotherapie.de/sitemap.xml
