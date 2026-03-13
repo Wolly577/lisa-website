@@ -205,4 +205,72 @@ document.addEventListener('DOMContentLoaded', () => {
 
     fadeElements.forEach(el => fadeObserver.observe(el));
 
+    // ========== 7. KONTAKTFORMULAR VALIDIERUNG ==========
+    const kontaktForm = document.getElementById('kontaktForm');
+
+    if (kontaktForm) {
+        kontaktForm.addEventListener('submit', function (e) {
+            let isValid = true;
+
+            // Clear previous errors
+            kontaktForm.querySelectorAll('.form-group').forEach(g => g.classList.remove('has-error'));
+            kontaktForm.querySelectorAll('.form-error').forEach(err => err.remove());
+
+            // Validate required fields
+            const requiredFields = kontaktForm.querySelectorAll('[required]');
+            requiredFields.forEach(field => {
+                if (field.type === 'checkbox' && !field.checked) {
+                    isValid = false;
+                    field.closest('.form-group').classList.add('has-error');
+                } else if (field.type !== 'checkbox' && !field.value.trim()) {
+                    isValid = false;
+                    field.closest('.form-group').classList.add('has-error');
+                }
+            });
+
+            // Validate email format
+            const emailField = document.getElementById('form-email');
+            if (emailField && emailField.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailField.value)) {
+                isValid = false;
+                emailField.closest('.form-group').classList.add('has-error');
+            }
+
+            // Validate PLZ (5 digits)
+            const plzField = document.getElementById('form-plz');
+            if (plzField && plzField.value && !/^[0-9]{5}$/.test(plzField.value)) {
+                isValid = false;
+                plzField.closest('.form-group').classList.add('has-error');
+                const errMsg = document.createElement('span');
+                errMsg.className = 'form-error';
+                errMsg.textContent = 'Bitte gültige 5-stellige PLZ eingeben';
+                plzField.closest('.form-group').appendChild(errMsg);
+            }
+
+            if (!isValid) {
+                e.preventDefault();
+                // Scroll to first error
+                const firstError = kontaktForm.querySelector('.has-error');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        });
+
+        // Remove error styling on input
+        kontaktForm.querySelectorAll('input, textarea').forEach(field => {
+            field.addEventListener('input', () => {
+                field.closest('.form-group')?.classList.remove('has-error');
+                field.closest('.form-group')?.querySelector('.form-error')?.remove();
+            });
+        });
+
+        // PLZ: only allow digits
+        const plzInput = document.getElementById('form-plz');
+        if (plzInput) {
+            plzInput.addEventListener('input', () => {
+                plzInput.value = plzInput.value.replace(/[^0-9]/g, '');
+            });
+        }
+    }
+
 });
