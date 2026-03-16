@@ -114,25 +114,66 @@ document.addEventListener('DOMContentLoaded', () => {
     // ========== 4. MODALS ==========
     const portfolioCards = document.querySelectorAll('.portfolio-card[data-modal]');
     const modals = document.querySelectorAll('.modal');
+    let lastFocusedElement = null;
+
+    // Focus trap helper
+    function trapFocus(modal) {
+        const focusableElements = modal.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        const firstFocusable = focusableElements[0];
+        const lastFocusable = focusableElements[focusableElements.length - 1];
+
+        modal.addEventListener('keydown', function(e) {
+            if (e.key !== 'Tab') return;
+
+            if (e.shiftKey) {
+                if (document.activeElement === firstFocusable) {
+                    e.preventDefault();
+                    lastFocusable.focus();
+                }
+            } else {
+                if (document.activeElement === lastFocusable) {
+                    e.preventDefault();
+                    firstFocusable.focus();
+                }
+            }
+        });
+    }
 
     portfolioCards.forEach(card => {
         card.addEventListener('click', () => {
             const modalId = card.getAttribute('data-modal');
             const modal = document.getElementById(modalId);
             if (modal) {
+                lastFocusedElement = card;
                 modal.classList.add('is-open');
                 document.body.style.overflow = 'hidden';
+
+                // Set focus to close button
+                const closeBtn = modal.querySelector('.modal-close');
+                if (closeBtn) closeBtn.focus();
+            }
+        });
+
+        card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                card.click();
             }
         });
     });
 
     modals.forEach(modal => {
+        trapFocus(modal);
+
         // Close on X button
         const closeBtn = modal.querySelector('.modal-close');
         if (closeBtn) {
             closeBtn.addEventListener('click', () => {
                 modal.classList.remove('is-open');
                 document.body.style.overflow = '';
+                if (lastFocusedElement) lastFocusedElement.focus();
             });
         }
 
@@ -141,6 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.target === modal) {
                 modal.classList.remove('is-open');
                 document.body.style.overflow = '';
+                if (lastFocusedElement) lastFocusedElement.focus();
             }
         });
     });
@@ -152,6 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (modal.classList.contains('is-open')) {
                     modal.classList.remove('is-open');
                     document.body.style.overflow = '';
+                    if (lastFocusedElement) lastFocusedElement.focus();
                 }
             });
         }
@@ -184,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ========== 6. FADE-IN ANIMATIONS ==========
     const fadeElements = document.querySelectorAll(
-        '.portfolio-card, .kontakt-card, .info-card, .methoden-item, .timeline-item, .therapeutin-grid'
+        '.portfolio-card, .kontakt-card, .info-card, .timeline-item, .therapeutin-grid'
     );
 
     fadeElements.forEach(el => {
@@ -242,7 +285,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 plzField.closest('.form-group').classList.add('has-error');
                 const errMsg = document.createElement('span');
                 errMsg.className = 'form-error';
+                errMsg.id = 'form-plz-error';
                 errMsg.textContent = 'Bitte gültige 5-stellige PLZ eingeben';
+                plzField.setAttribute('aria-describedby', 'form-plz-error');
                 plzField.closest('.form-group').appendChild(errMsg);
             }
 
@@ -261,6 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
             field.addEventListener('input', () => {
                 field.closest('.form-group')?.classList.remove('has-error');
                 field.closest('.form-group')?.querySelector('.form-error')?.remove();
+                field.removeAttribute('aria-describedby');
             });
         });
 
@@ -272,5 +318,38 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     }
+
+    // ========== ACCORDION ==========
+    const accordionHeaders = document.querySelectorAll('.accordion-header');
+
+    accordionHeaders.forEach(header => {
+        header.addEventListener('click', () => {
+            const body = document.getElementById(header.getAttribute('aria-controls'));
+            const isOpen = header.getAttribute('aria-expanded') === 'true';
+
+            // Close all other accordion items
+            accordionHeaders.forEach(otherHeader => {
+                if (otherHeader !== header) {
+                    otherHeader.setAttribute('aria-expanded', 'false');
+                    const otherBody = document.getElementById(otherHeader.getAttribute('aria-controls'));
+                    if (otherBody) {
+                        otherBody.classList.remove('is-open');
+                        otherBody.style.maxHeight = null;
+                    }
+                }
+            });
+
+            // Toggle current item
+            if (isOpen) {
+                header.setAttribute('aria-expanded', 'false');
+                body.classList.remove('is-open');
+                body.style.maxHeight = null;
+            } else {
+                header.setAttribute('aria-expanded', 'true');
+                body.classList.add('is-open');
+                body.style.maxHeight = body.scrollHeight + 40 + 'px';
+            }
+        });
+    });
 
 });

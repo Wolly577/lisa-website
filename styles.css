@@ -769,84 +769,6 @@ ul {
 }
 
 /* =========================================================================
-   Methoden Section
-   ========================================================================= */
-.section-methoden {
-    padding: 5rem 0;
-    background: var(--bg-light);
-}
-
-.methoden-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.methoden-item {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    padding: 1rem 1.5rem;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-    transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.methoden-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-}
-
-.methoden-icon {
-    color: var(--primary);
-    font-size: 0.6rem;
-    flex-shrink: 0;
-}
-
-.methoden-item span {
-    font-size: 0.9rem;
-    color: var(--text);
-}
-
-/* =========================================================================
-   Parallax Banner
-   ========================================================================= */
-.parallax-banner {
-    min-height: 400px;
-    background-attachment: fixed;
-    background-size: cover;
-    background-position: center;
-    position: relative;
-}
-
-.parallax-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(44, 53, 49, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}
-
-.parallax-overlay h2 {
-    font-family: var(--font-heading);
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 0.5rem;
-}
-
-.parallax-overlay p {
-    color: rgba(255, 255, 255, 0.85);
-    font-size: 1.1rem;
-    margin-bottom: 2rem;
-}
-
-/* =========================================================================
    Kontakt Section
    ========================================================================= */
 .section-kontakt {
@@ -944,6 +866,85 @@ ul {
 }
 
 /* =========================================================================
+   Accordion
+   ========================================================================= */
+.accordion {
+    max-width: 800px;
+    margin: 0 auto 2rem;
+}
+
+.accordion-item {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+    transition: box-shadow 0.3s;
+}
+
+.accordion-item:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+.accordion-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 1.5rem;
+    background: #fff;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--dark);
+    text-align: left;
+    transition: background 0.3s, color 0.3s;
+}
+
+.accordion-header:hover {
+    background: var(--bg-light);
+    color: var(--primary);
+}
+
+.accordion-header[aria-expanded="true"] {
+    background: var(--primary);
+    color: #fff;
+}
+
+.accordion-icon {
+    flex-shrink: 0;
+    transition: transform 0.3s;
+}
+
+.accordion-header[aria-expanded="true"] .accordion-icon {
+    transform: rotate(180deg);
+}
+
+.accordion-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+    padding: 0 1.5rem;
+    background: #fff;
+}
+
+.accordion-body.is-open {
+    padding: 1.2rem 1.5rem;
+}
+
+.accordion-body p {
+    color: var(--text-light);
+    line-height: 1.8;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+.accordion-body p:last-child {
+    margin-bottom: 0;
+}
+
+/* =========================================================================
    Site Footer
    ========================================================================= */
 .site-footer {
@@ -977,7 +978,7 @@ ul {
 }
 
 .footer-col a {
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.75);
     transition: color 0.3s;
 }
 
@@ -1259,13 +1260,6 @@ ul {
         font-size: 2.2rem;
     }
 
-    .parallax-overlay h2 {
-        font-size: 2rem;
-    }
-
-    .parallax-banner {
-        background-attachment: scroll;
-    }
 }
 
 /* Mobile */
@@ -1341,7 +1335,6 @@ ul {
     }
 
     .section-person,
-    .section-methoden,
     .section-patienteninfo {
         padding: 3rem 0;
     }
@@ -1392,15 +1385,6 @@ ul {
 
     .portfolio-card h4 {
         font-size: 0.8rem;
-    }
-
-    /* Parallax */
-    .parallax-banner {
-        min-height: 300px;
-    }
-
-    .parallax-overlay h2 {
-        font-size: 1.6rem;
     }
 
     /* Opening Banner */
